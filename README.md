@@ -93,48 +93,6 @@ gcc -DUNIVAC -O2 -Wall -Wextra -std=c99 ^
 4. Take turns firing at coordinates (e.g., "B5")
 5. First to sink all enemy ships wins!
 
-## Cross-Platform Implementation Details
-
-### Conditional Compilation
-
-The code uses preprocessor directives to handle platform differences:
-
-```c
-#ifdef UNIVAC
-    // UNIVAC-specific code (simple screen clear, portable string functions)
-#elif defined(_WIN32)
-    // Windows-specific code (system("cls"), etc.)
-#endif
-```
-
-### String Safety
-
-```c
-#ifdef _MSC_VER
-    // Use Microsoft's secure functions
-    strcpy_s(dest, size, src);
-#else
-    // Use portable alternatives
-    strncpy(dest, src, size - 1);
-    dest[size - 1] = '\0';
-#endif
-```
-
-### Random Number Generation
-
-Uses XorShift32 algorithm for all platforms:
-
-```c
-unsigned int xorshift32(unsigned int* state) {
-    unsigned int x = *state;
-    x ^= x << 13;
-    x ^= x >> 17;
-    x ^= x << 5;
-    *state = x;
-    return x;
-}
-```
-
 Seeded with `time(0)` XOR'd with a constant for UNIVAC compatibility.
 
 ## AI Algorithm
@@ -155,28 +113,3 @@ The Intermediate Adversary uses a Hunt & Target strategy:
    - Maintains list of all possible targets (0-99 encoded coordinates)
    - Maintains hunt list (checkerboard pattern)
    - Tracks fired positions to avoid duplicates
-
-## Performance
-
-- Optimized builds use aggressive compiler flags:
-  - `-O3` with LTO (Link-Time Optimization)
-  - `-march=native` for CPU-specific instructions
-  - Whole program optimization on MSVC
-  
-- UNIVAC builds prioritize compatibility over aggressive optimization
-  - Uses `-O2` for reliable optimization
-  - Avoids advanced CPU instructions
-  - Minimal memory footprint
-
-## License
-
-See LICENSE file for details.
-
-## Original Java Version
-
-This is a port of the Java Battleship game. The original implements multiple AI engines:
-- Naive Solver (Easy)
-- Intermediate Adversary (Medium) - **Ported in this version**
-- Boogeyman (Hard)
-
-This C port focuses on the Intermediate Adversary for demonstration of cross-platform compilation techniques.
