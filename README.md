@@ -1,31 +1,182 @@
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/kj3moraes/Battleship-Game-Engine/blob/main/LICENSE)
+# Battleship Game - C Port
 
-# Battleship-Game-Engine
-This is a text-based PvE game where the player can decide the engine that they would like to go up against. The choices are :
-1. `Naive_Solver` - places ships randomly, attacks randomly and does not learn about ships positions
-2. `Intermediate_Adversary` - places ships randomly, attacks randomly but remembers ships positions and increases attacks accordingly
-3. `Boogeyman` - plays perfectly via the battleship playing algorithm. Shows no mercy
+Cross-platform Battleship game implementation in C with Intermediate Adversary AI.
 
+## Platform Compatibility
 
-The **Battleship Playing Guide** details how you should interact with the text-based game interface to play it properly.
-The documentation for the various parts of the code is found within the markdown files in the respective folders and 
-comments in the code. A final PDF will be attached detailing the algorithm implemented for Boogeyman and some aspects
-of the code.
+This program compiles and runs on:
+- **Windows with MSVC** (Microsoft Visual C++)
+- **Windows with MinGW** (GCC for Windows)
+- **UNIVAC 1219** (Cross-compiled with GCC using `-DUNIVAC` flag)
 
-## How to Play this Text-based Game
-To play this game you will need to download the source code to any folder you like. Open an IDE or a code editor that
-can compile and run Java code and compile all the Java files. Then run `Main.java`. This will bring up the console and prompt you with the _ACTION MENU_. 
-From then on, follow the Battleship Playing Guide.
+## Features
 
-**Class Descriptions**
-* `Main.java` - houses all the interacting piece. Is the executable file to play the game
-* `Ship.java` - class containing the specifications of the Ships used and its respective position on the Battlefield
-* `Battlefield.java`- class that provides the playable arena
-* `Player.java` - abstract class outlining how a player should play
-    * `Human.java` - a human player 
-    * `BattleshipEngine.java` - a machine player abstract class
-        * `Naive_Solver.java` - the easy engine
-        * `Intermediate_Adversary,java` - the medium engine   
-        * `Boogeyman.java` - the hard engine
+- **Intermediate Adversary AI**: Hunt & Target algorithm
+  - Hunt mode: Fires at checkerboard pattern for efficiency
+  - Target mode: When a ship is hit, fires at adjacent squares
+  - Adaptive strategy that switches between modes
 
-This repository is licensed under the MIT License. Click on the license bade or go to the LICENSE file for terms and conditions.
+- **Cross-Platform Random Number Generation**
+  - XorShift32 algorithm seeded with `time(0)`
+  - Works consistently across all platforms including UNIVAC 1219
+  - No dependency on platform-specific RNG functions
+
+- **Platform-Specific Optimizations**
+  - Uses `strcpy_s` on MSVC for safety
+  - Uses `strncpy` on GCC and UNIVAC for compatibility
+  - Conditional compilation with `#ifdef` preprocessor directives
+
+## Building
+
+### Quick Build
+
+Simply run the batch file and select your platform:
+
+```batch
+build_battleship.bat
+```
+
+You'll be prompted to choose:
+1. **Platform**: Windows or UNIVAC
+2. **Compiler** (Windows only): MinGW or MSVC
+
+### Manual Build Instructions
+
+#### Windows with MinGW (GCC)
+
+```batch
+gcc -Wall -Wextra -std=c99 -O3 -march=native -mtune=native -flto ^
+    -o battleship_mingw.exe ^
+    main.c battlefield.c ship.c player.c ai_engine.c utils.c ^
+    -s -static -lm
+```
+
+#### Windows with MSVC
+
+```batch
+cl /W4 /O2 /Ox /Ob2 /Oi /Ot /Oy /GL /arch:AVX2 ^
+   /Fe:battleship.exe ^
+   main.c battlefield.c ship.c player.c ai_engine.c utils.c ^
+   /link /LTCG /OPT:REF /OPT:ICF
+```
+
+#### UNIVAC 1219 (Cross-compile)
+
+```batch
+gcc -DUNIVAC -O2 -Wall -Wextra -std=c99 ^
+    -o battleship_univac.exe ^
+    main.c battlefield.c ship.c player.c ai_engine.c utils.c ^
+    -lm
+```
+
+## File Structure
+
+- `battleship.h` - Main header with cross-platform definitions
+- `main.c` - Game main loop and user interaction
+- `battlefield.c` - Battlefield management and validation
+- `ship.c` - Ship data structure and operations
+- `player.c` - Player management
+- `ai_engine.c` - Intermediate Adversary AI implementation
+- `utils.c` - Utility functions (RNG, screen clearing, input)
+- `build_battleship.bat` - Unified build script
+
+## How to Play
+
+1. Run the executable for your platform
+2. Enter your name
+3. Place your 5 ships:
+   - Aircraft Carrier (5 squares)
+   - Battleship (4 squares)
+   - Cruiser (3 squares)
+   - Submarine (3 squares)
+   - Destroyer (2 squares)
+4. Take turns firing at coordinates (e.g., "B5")
+5. First to sink all enemy ships wins!
+
+## Cross-Platform Implementation Details
+
+### Conditional Compilation
+
+The code uses preprocessor directives to handle platform differences:
+
+```c
+#ifdef UNIVAC
+    // UNIVAC-specific code (simple screen clear, portable string functions)
+#elif defined(_WIN32)
+    // Windows-specific code (system("cls"), etc.)
+#endif
+```
+
+### String Safety
+
+```c
+#ifdef _MSC_VER
+    // Use Microsoft's secure functions
+    strcpy_s(dest, size, src);
+#else
+    // Use portable alternatives
+    strncpy(dest, src, size - 1);
+    dest[size - 1] = '\0';
+#endif
+```
+
+### Random Number Generation
+
+Uses XorShift32 algorithm for all platforms:
+
+```c
+unsigned int xorshift32(unsigned int* state) {
+    unsigned int x = *state;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    *state = x;
+    return x;
+}
+```
+
+Seeded with `time(0)` XOR'd with a constant for UNIVAC compatibility.
+
+## AI Algorithm
+
+The Intermediate Adversary uses a Hunt & Target strategy:
+
+1. **Hunt Mode**: Fires at squares in a checkerboard pattern (even parity)
+   - More efficient than random firing
+   - Guarantees hitting any ship of length 2 or more
+
+2. **Target Mode**: When a ship is hit:
+   - Calculates adjacent squares (North, South, East, West)
+   - Fires at valid adjacent positions
+   - Continues until ship is sunk
+   - Returns to Hunt mode when ship is destroyed
+
+3. **State Management**:
+   - Maintains list of all possible targets (0-99 encoded coordinates)
+   - Maintains hunt list (checkerboard pattern)
+   - Tracks fired positions to avoid duplicates
+
+## Performance
+
+- Optimized builds use aggressive compiler flags:
+  - `-O3` with LTO (Link-Time Optimization)
+  - `-march=native` for CPU-specific instructions
+  - Whole program optimization on MSVC
+  
+- UNIVAC builds prioritize compatibility over aggressive optimization
+  - Uses `-O2` for reliable optimization
+  - Avoids advanced CPU instructions
+  - Minimal memory footprint
+
+## License
+
+See LICENSE file for details.
+
+## Original Java Version
+
+This is a port of the Java Battleship game. The original implements multiple AI engines:
+- Naive Solver (Easy)
+- Intermediate Adversary (Medium) - **Ported in this version**
+- Boogeyman (Hard)
+
+This C port focuses on the Intermediate Adversary for demonstration of cross-platform compilation techniques.
