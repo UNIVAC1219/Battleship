@@ -21,25 +21,25 @@ int main(int argc, char* argv[]) {
     int did_p1_win = 0;
     
     printf("\n========================================\n");
-    printf("   BATTLESHIP - Intermediate AI\n");
-    printf("   Platform: %s\n", PLATFORM_NAME);
+    printf("   BATTLESHIP - INTERMEDIATE AI\n");
+    printf("   PLATFORM: %s\n", PLATFORM_NAME);
     printf("========================================\n\n");
     
     /* Initialize random number generator */
     init_random(&rng_state);
     
     /* Menu 1: Action Menu */
-    printf("What would you like to do?\n");
-    printf("\t[s]tart\n\te[x]it\n");
+    printf("WHAT WOULD YOU LIKE TO DO?\n");
+    printf("\t[S]TART\n\tE[X]IT\n");
     get_input(input, sizeof(input));
     
     if (input[0] == 'x' || input[0] == 'X') {
-        printf("Exiting game. Goodbye!\n");
+        printf("EXITING GAME. GOODBYE!\n");
         return 0;
     }
     
     /* Get human player name */
-    printf("\nEnter your name: ");
+    printf("\nENTER YOUR NAME: ");
     get_input(input, sizeof(input));
     init_player(&human, input);
     
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     printf("========================================\n\n");
     
     /* Human places ships */
-    printf("Player 1, place your ships on the game field\n");
+    printf("PLAYER 1, PLACE YOUR SHIPS ON THE GAME FIELD\n");
     print_battlefield(&human.arena, 0);
     
     for (i = 0; i < NO_OF_SHIPS; i++) {
@@ -60,8 +60,8 @@ int main(int argc, char* argv[]) {
         int coF, coS;
         int placement_res;
         
-        printf("\nPlace %s (length %d)\n", human.ships[i].name, human.ships[i].length);
-        printf("Enter first coordinate (e.g., A1): ");
+        printf("\nPLACE %s (LENGTH %d)\n", human.ships[i].name, human.ships[i].length);
+        printf("ENTER FIRST COORDINATE (E.G., A1): ");
         get_input(input, sizeof(input));
         roF = input[0];
         #ifdef _MSC_VER
@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
         sscanf(input + 1, "%d", &coF);
         #endif
         
-        printf("Enter second coordinate (e.g., A5): ");
+        printf("ENTER SECOND COORDINATE (E.G., A5): ");
         get_input(input, sizeof(input));
         roS = input[0];
         #ifdef _MSC_VER
@@ -86,7 +86,7 @@ int main(int argc, char* argv[]) {
         placement_res = is_correct_coordinates(&human.arena, roF, roS, coF, coS, &human.ships[i]);
         
         if (placement_res != VALID_COORD) {
-            printf("Invalid placement! Try again.\n");
+            printf("INVALID PLACEMENT! TRY AGAIN.\n");
             i--;
             continue;
         }
@@ -111,28 +111,28 @@ int main(int argc, char* argv[]) {
     prompt_enter_key();
     
     /* AI places ships */
-    printf("\nKindly wait while the machine places its ships\n");
+    printf("\nKINDLY WAIT WHILE THE MACHINE PLACES ITS SHIPS\n");
     for (i = 0; i < NO_OF_SHIPS; i++) {
         ai_place_ship(&ai_player, i, &rng_state);
     }
-    printf("\nThe machine has completed placing its ships!\n\n");
+    printf("\nTHE MACHINE HAS COMPLETED PLACING ITS SHIPS!\n\n");
     print_battlefield(&ai_player.arena, 0);
     
     prompt_enter_key();
     
     /* Wartime - Main game loop */
-    printf("The game starts!\n\n");
+    printf("THE GAME STARTS!\n\n");
     
     while (1) {
         /* Display both battlefields */
-        printf("Enemy battlefield:\n");
+        printf("ENEMY BATTLEFIELD:\n");
         print_battlefield(&ai_player.arena, 1);
         print_divider();
-        printf("Your battlefield:\n");
+        printf("YOUR BATTLEFIELD:\n");
         print_battlefield(&human.arena, 0);
         
         /* Human fires */
-        printf("Enter coordinates to fire at (e.g., B5): ");
+        printf("ENTER COORDINATES TO FIRE AT (E.G., B5): ");
         get_input(input, sizeof(input));
         SAFE_STRCPY(shot, input, MAX_COORD_LENGTH);
         shot_row = shot[0];
@@ -147,9 +147,9 @@ int main(int argc, char* argv[]) {
             ai_manage_ship_hit(&ai_player, &ai_engine, shot_row, shot_col);
         } else if (is_miss(&ai_player.arena, shot_row, shot_col)) {
             place_piece(&ai_player.arena, shot_row, shot_col, MISS);
-            printf("You missed! Try again next turn\n");
+            printf("YOU MISSED! TRY AGAIN NEXT TURN\n");
         } else {
-            printf("Already fired at this location!\n");
+            printf("ALREADY FIRED AT THIS LOCATION!\n");
         }
         
         /* Check if human won */
@@ -159,9 +159,9 @@ int main(int argc, char* argv[]) {
         }
         
         /* AI fires */
-        printf("\nPlease wait while the engine makes its move\n");
+        printf("\nPLEASE WAIT WHILE THE ENGINE MAKES ITS MOVE\n");
         ai_fire_salvo(&ai_engine, shot, &rng_state);
-        printf("The engine fired at %s\n", shot);
+        printf("THE ENGINE FIRED AT %s\n", shot);
         shot_row = shot[0];
         #ifdef _MSC_VER
         sscanf_s(shot + 1, "%d", &shot_col);
@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
             manage_ship_hit(&human, shot_row, shot_col);
         } else if (is_miss(&human.arena, shot_row, shot_col)) {
             place_piece(&human.arena, shot_row, shot_col, MISS);
-            printf("The engine fired at %s and missed.\n", shot);
+            printf("THE ENGINE FIRED AT %s AND MISSED.\n", shot);
         }
         
         /* Check if AI won */
@@ -191,9 +191,9 @@ int main(int argc, char* argv[]) {
     printf("========================================\n\n");
     
     if (did_p1_win) {
-        printf("Congratulations %s, you have won this game of Battleship!\n", human.name);
+        printf("CONGRATULATIONS %s, YOU HAVE WON THIS GAME OF BATTLESHIP!\n", human.name);
     } else {
-        printf("The Intermediate AI Engine won this game of Battleship!\n");
+        printf("THE INTERMEDIATE AI ENGINE WON THIS GAME OF BATTLESHIP!\n");
     }
     
     return 0;

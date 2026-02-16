@@ -188,7 +188,7 @@ void ai_manage_ship_hit(Player* p, IntermediateAI* ai, char row, int col) {
             remove_ship_part(&p->ships[i], row, col);
             
             if (is_ship_sunken(&p->ships[i])) {
-                printf("You sank a ship!\n");
+                printf("YOU SANK A SHIP!\n");
                 /* Remove ship from array */
                 for (j = i; j < p->ship_count - 1; j++) {
                     p->ships[j] = p->ships[j + 1];
@@ -196,7 +196,7 @@ void ai_manage_ship_hit(Player* p, IntermediateAI* ai, char row, int col) {
                 p->ship_count--;
                 ai->is_targeting = 0;  /* Stop targeting when ship is sunk */
             } else {
-                printf("You hit a ship!\n");
+                printf("YOU HIT A SHIP!\n");
                 ai->is_targeting = 1;  /* Start targeting mode */
             }
             found = 1;

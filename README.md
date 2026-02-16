@@ -2,13 +2,6 @@
 
 Cross-platform Battleship game implementation in C with Intermediate Adversary AI.
 
-## Platform Compatibility
-
-This program compiles and runs on:
-- **Windows with MSVC** (Microsoft Visual C++)
-- **Windows with MinGW** (GCC for Windows)
-- **UNIVAC 1219** (Cross-compiled with GCC using `-DUNIVAC` flag)
-
 ## Features
 
 - **Intermediate Adversary AI**: Hunt & Target algorithm
@@ -34,39 +27,6 @@ Simply run the batch file and select your platform:
 
 ```batch
 build_battleship.bat
-```
-
-You'll be prompted to choose:
-1. **Platform**: Windows or UNIVAC
-2. **Compiler** (Windows only): MinGW or MSVC
-
-### Manual Build Instructions
-
-#### Windows with MinGW (GCC)
-
-```batch
-gcc -Wall -Wextra -std=c99 -O3 -march=native -mtune=native -flto ^
-    -o battleship_mingw.exe ^
-    main.c battlefield.c ship.c player.c ai_engine.c utils.c ^
-    -s -static -lm
-```
-
-#### Windows with MSVC
-
-```batch
-cl /W4 /O2 /Ox /Ob2 /Oi /Ot /Oy /GL /arch:AVX2 ^
-   /Fe:battleship.exe ^
-   main.c battlefield.c ship.c player.c ai_engine.c utils.c ^
-   /link /LTCG /OPT:REF /OPT:ICF
-```
-
-#### UNIVAC 1219 (Cross-compile)
-
-```batch
-gcc -DUNIVAC -O2 -Wall -Wextra -std=c99 ^
-    -o battleship_univac.exe ^
-    main.c battlefield.c ship.c player.c ai_engine.c utils.c ^
-    -lm
 ```
 
 ## File Structure

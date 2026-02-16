@@ -14,7 +14,7 @@
     #include <string.h>
     #include <time.h>
 #else
-    #define PLATFORM_NAME "Windows"
+    #define PLATFORM_NAME "WINDOWS"
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>

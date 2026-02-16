@@ -66,7 +66,7 @@ void clear_screen(void) {
 
 /* Prompt user to press Enter */
 void prompt_enter_key(void) {
-    printf("Press Enter for the next step\n");
+    printf("PRESS ENTER FOR THE NEXT STEP\n");
     getchar();
     clear_screen();
 }

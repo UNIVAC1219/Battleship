@@ -38,14 +38,14 @@ void manage_ship_hit(Player* p, char row, int col) {
             remove_ship_part(&p->ships[i], row, col);
             
             if (is_ship_sunken(&p->ships[i])) {
-                printf("You sank a ship!\n");
+                printf("YOU SANK A SHIP!\n");
                 /* Remove ship from array by shifting */
                 for (j = i; j < p->ship_count - 1; j++) {
                     p->ships[j] = p->ships[j + 1];
                 }
                 p->ship_count--;
             } else {
-                printf("You hit a ship!\n");
+                printf("YOU HIT A SHIP!\n");
             }
             found = 1;
         }
