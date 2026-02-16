@@ -2,22 +2,10 @@
 
 Cross-platform Battleship game implementation in C with Intermediate Adversary AI.
 
-## Features
-
-- **Intermediate Adversary AI**: Hunt & Target algorithm
+## Intermediate Adversary AI
   - Hunt mode: Fires at checkerboard pattern for efficiency
   - Target mode: When a ship is hit, fires at adjacent squares
   - Adaptive strategy that switches between modes
-
-- **Cross-Platform Random Number Generation**
-  - XorShift32 algorithm seeded with `time(0)`
-  - Works consistently across all platforms including UNIVAC 1219
-  - No dependency on platform-specific RNG functions
-
-- **Platform-Specific Optimizations**
-  - Uses `strcpy_s` on MSVC for safety
-  - Uses `strncpy` on GCC and UNIVAC for compatibility
-  - Conditional compilation with `#ifdef` preprocessor directives
 
 ## Building
 
