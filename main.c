@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
     init_player(&human, input);
     
     /* Initialize AI player */
-    init_player(&ai_player, "Intermediate AI");
+    init_player(&ai_player, "INTERMEDIATE AI");
     init_intermediate_ai(&ai_engine);
     
     printf("\n========================================\n");

@@ -12,11 +12,11 @@ void init_player(Player* p, const char* name) {
     p->ship_count = NO_OF_SHIPS;
     
     /* Initialize all ships */
-    init_ship(&p->ships[0], "Aircraft Carrier", 5);
-    init_ship(&p->ships[1], "Battleship", 4);
-    init_ship(&p->ships[2], "Cruiser", 3);
-    init_ship(&p->ships[3], "Submarine", 3);
-    init_ship(&p->ships[4], "Destroyer", 2);
+    init_ship(&p->ships[0], "AIRCRAFT CARRIER", 5);
+    init_ship(&p->ships[1], "BATTLESHIP", 4);
+    init_ship(&p->ships[2], "CRUISER", 3);
+    init_ship(&p->ships[3], "SUBMARINE", 3);
+    init_ship(&p->ships[4], "DESTROYER", 2);
 }
 
 /* Check if all ships are sunken */

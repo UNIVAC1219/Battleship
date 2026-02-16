@@ -57,10 +57,10 @@ void clear_screen(void) {
     }
     #elif defined(_WIN32)
     /* Windows: Use system command */
-    system("cls");
+    system("CLS");
     #else
     /* Unix/Linux: Use system command */
-    system("clear");
+    system("CLEAR");
     #endif
 }
 
